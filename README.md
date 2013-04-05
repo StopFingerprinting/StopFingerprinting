@@ -9,4 +9,4 @@ installations. This Firefox and Chrome extensions, once installed, will send
 us that data every our.
 
 To learn more about this and check which data we are gathering visit our site:
-https://stopfingerprinting.inria.fr/
+https://stopfingerprinting.irisa.fr/
