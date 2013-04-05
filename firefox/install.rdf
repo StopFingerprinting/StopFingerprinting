@@ -8,7 +8,7 @@
     <em:name>StopFingerprinting</em:name>
     <em:version>0.1.8</em:version>
     <em:creator>Inria</em:creator>
-    <em:description>Fingerprinting analysis and protection extension.</em:description>
+    <em:description>Fingerprinting analysis extension.</em:description>
 <!--
 Longer description:
 
