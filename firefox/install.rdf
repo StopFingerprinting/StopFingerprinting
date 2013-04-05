@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+  <Description about="urn:mozilla:install-manifest">
+
+    <em:id>informationgathering@stopfingerprinting.irisa.fr</em:id>
+    <em:name>StopFingerprinting</em:name>
+    <em:version>0.1.8</em:version>
+    <em:creator>Inria</em:creator>
+    <em:description>Fingerprinting analysis and protection extension.</em:description>
+<!--
+Longer description:
+
+Web browser fingerprinting can be used by the websites to track the website visitors and build their profiles. In order to understand how this fingerprinting mechanism works, and provide corresponding protection we have developed a web browser extension StopFingerpinting.
+
+The ultimate goal of the extension is to provide the protection from fingerprinting techniques. As a first step, StopFingerprinting extension is gathering the browser fingerprints (similar to those collected by Panopticlick)  in order to analyse the stability of browser fingerprints.
+-->
+    <em:targetApplication>
+      <Description>
+        <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+        <em:minVersion>17.0</em:minVersion>
+        <em:maxVersion>20.*</em:maxVersion>
+        <em:type>2</em:type>
+      </Description>
+    </em:targetApplication>
+
+  </Description>
+
+</RDF>

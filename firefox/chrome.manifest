@@ -1,0 +1,4 @@
+content	stopfingerprinting	content/
+locale    stopfingerprinting  en-US         locale/en-US/
+
+overlay	chrome://browser/content/browser.xul	chrome://stopfingerprinting/content/overlay.xul

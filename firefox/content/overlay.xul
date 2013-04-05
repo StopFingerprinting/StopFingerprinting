@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet type="text/css" href="chrome://global/skin/" ?>
+
+<!DOCTYPE overlay SYSTEM "chrome://extension/locale/overlay.dtd">
+
+<overlay id="stopfingerprinting-overlay"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+        <script src="common/inherits.js"></script>
+        <script src="common/AbstractFingerprinter.js"></script>
+        <script src="common/AbstractController.js"></script>
+        <script src="FirefoxFingerprinter.js"></script>
+        <script src="FirefoxController.js"></script>
+        <script>
+            window.addEventListener("load", function(event) {
+                var controller = new FirefoxController(FirefoxFingerprinter);
+                controller.run();
+            }, false);
+        </script>
+
+</overlay>
+
+

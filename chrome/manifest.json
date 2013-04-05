@@ -1,0 +1,15 @@
+{
+    "name": "StopFingerprinting",
+    "version": "0.1.8",
+    "manifest_version": 2,
+    "description": "Fingerprinting analysis and protection extension.",
+    "background": {
+        "page": "background.html"
+    },
+    "permissions": [
+        "https://stopfingerprinting.irisa.fr/*",
+        "storage",
+        "fontSettings"
+    ],
+    "content_security_policy": "script-src 'self' https://stopfingerprinting.irisa.fr; object-src 'self' https://stopfingerprinting.irisa.fr"
+}

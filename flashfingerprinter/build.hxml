@@ -1,0 +1,4 @@
+-main Fingerprinter
+-swf-version 11
+-swf fp.swf
+-debug
