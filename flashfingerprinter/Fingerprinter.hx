@@ -117,6 +117,7 @@ class ExtInterface {
 
     private var fpId:String;
     private var submitionUrl:String;
+    private var urlLoader:flash.net.URLLoader;
 
     public function new() {
     }
@@ -132,6 +133,17 @@ class ExtInterface {
         this._sendFingerprint(fp);
     }
 
+    public function completeEvent(event:flash.events.Event):Void {
+        var response = haxe.Json.parse(this.urlLoader.data);
+        flash.external.ExternalInterface.call(
+            "sendJsonMessageToExtension",
+            haxe.Json.stringify({
+                action: "STORE_FLASH_FINGERPRINT",
+                data: response.payload.flashFingerprint
+            })
+        );
+    }
+
     private function _sendFingerprint(fp:Fp) {
         var request = new flash.net.URLRequest(this.submitionUrl);
         request.method = flash.net.URLRequestMethod.POST;
@@ -139,8 +151,12 @@ class ExtInterface {
         data.id = this.fpId;
         data.fingerprint = haxe.Json.stringify(fp);
         request.data = data;
-        var loader = new flash.net.URLLoader();
-        loader.load(request);
+        this.urlLoader = new flash.net.URLLoader();
+        this.urlLoader.addEventListener(
+            flash.events.Event.COMPLETE,
+            completeEvent
+        );
+        this.urlLoader.load(request);
     }
 }
 

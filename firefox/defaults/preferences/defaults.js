@@ -3,3 +3,5 @@ pref("extensions.stopfingerprinting.submitUrl", "https://stopfingerprinting.iris
 pref("extensions.stopfingerprinting.flashFingerprinterUrl", "https://stopfingerprinting.irisa.fr/fingerprint/flash");
 pref("extensions.stopfingerprinting.submitInterval", 3600000); //One hour
 pref("extensions.stopfingerprinting.version", "0.1.9");
+pref("extensions.stopfingerprinting.fingerprintsCount", 0);
+pref("extensions.stopfingerprinting.lastFingerprint", "");

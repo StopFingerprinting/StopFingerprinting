@@ -25,6 +25,9 @@ The ultimate goal of the extension is to provide the protection from fingerprint
       </Description>
     </em:targetApplication>
 
+    <em:optionsURL>chrome://stopfingerprinting/content/common/options.html</em:optionsURL>
+    <em:optionsType>3</em:optionsType>
+    <em:icon64URL>chrome://stopfingerprinting/content/common/icons/64.png</em:icon64URL>
   </Description>
 
 </RDF>
