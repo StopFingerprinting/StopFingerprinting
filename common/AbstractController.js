@@ -23,10 +23,6 @@ function AbstractController(fingerprinterClass) {
     window.setInterval(function () {
         if (self._logs.length && self.logsUrl) {
 
-            self._logs.forEach(function (i) {
-                console.log(i);
-            });
-
             var json = JSON.stringify(self._logs);
             self._logs = [];
 
