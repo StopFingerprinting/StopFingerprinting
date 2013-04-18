@@ -22,7 +22,7 @@
     "content_scripts": [
         {
             "matches": ["*://stopfingerprinting.irisa.fr/fingerprint/flash*"],
-            "js": ["flashfp_content_script.js"],
+            "js": ["forward_extension_messages.js"],
             "all_frames": true,
             "run_at": "document_start"
         }
