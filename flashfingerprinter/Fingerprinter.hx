@@ -120,6 +120,11 @@ class ExtInterface {
     private var urlLoader:flash.net.URLLoader;
 
     public function new() {
+        this.urlLoader = new flash.net.URLLoader();
+        this.urlLoader.addEventListener(
+            flash.events.Event.COMPLETE,
+            completeEvent
+        );
     }
 
     public function sendFingerprint(fpId:String, submitionUrl:String) {
@@ -151,11 +156,6 @@ class ExtInterface {
         data.id = this.fpId;
         data.fingerprint = haxe.Json.stringify(fp);
         request.data = data;
-        this.urlLoader = new flash.net.URLLoader();
-        this.urlLoader.addEventListener(
-            flash.events.Event.COMPLETE,
-            completeEvent
-        );
         this.urlLoader.load(request);
     }
 }
