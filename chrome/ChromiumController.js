@@ -28,6 +28,8 @@ ChromiumController.prototype._getSettings = function(callback) {
                 self.submitInterval = response.submitInterval;
                 self.flashFingerprinterUrl = response.flashFingerprinterUrl;
                 self.version = response.version;
+                self.logsEnabled = response.logsEnabled;
+                self.logsUrl = response.logsUrl;
 
                 if (callback) {
                     callback();
@@ -105,6 +107,8 @@ ChromiumController.prototype._setupPort = function() {
                     action: "GET_LAST_FINGERPRINT",
                     fp: self._lastFingerprint
                 };
+            } else if (msg.action === "LOG") {
+                self.log(msg.msg);
             }
 
             if (response) {

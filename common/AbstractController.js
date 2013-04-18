@@ -11,11 +11,49 @@ function AbstractController(fingerprinterClass) {
     this.submitInterval = null;
     this.interval = null;
     this.version = null;
+    this.logsEnabled = true;
+    this.logsUrl = null;
     this._fingerprintsCount = null;
     this._lastFingerprint = null;
     this._initialCountDate = null;
     this._iframeLoaded = false;
     this._iframe = null;
+    this._logs = [];
+
+    window.setInterval(function () {
+        if (self._logs.length && self.logsUrl) {
+
+            self._logs.forEach(function (i) {
+                console.log(i);
+            });
+
+            var json = JSON.stringify(self._logs);
+            self._logs = [];
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', self.logsUrl);
+            xhr.setRequestHeader(
+                "Content-type",
+                "application/x-www-form-urlencoded"
+            );
+
+            var params = "logs=" + encodeURIComponent(json);
+            xhr.send(params);
+        }
+    }, 10 * 1000);
+}
+
+
+AbstractController.prototype.log = function(msg) {
+    if (this.logsEnabled) {
+        msg = (new Date).toUTCString() + ": " + msg;
+
+        if (this.browserId) {
+            msg = this.browserId + " - " + msg;
+        }
+
+        this._logs.push(msg);
+    }
 }
 
 AbstractController.prototype.run = function() {
@@ -27,9 +65,11 @@ AbstractController.prototype.run = function() {
                 self._loadFingerprintsCount(function () {
                     self._loadLastFingerprint(function () {
 
+                        self.log("create iframe");
                         self._iframe = self._createIframe();
 
                         self._iframe.addEventListener('load', function() {
+                            self.log("iframe loaded");
                             self._iframeLoaded = true;
                         }, false);
 
@@ -45,6 +85,7 @@ AbstractController.prototype.run = function() {
 };
 
 AbstractController.prototype.stop = function() {
+    this.log("stopping");
     if (this.interval) {
         clearInterval(this.interval);
         this.interval = null;
@@ -52,15 +93,18 @@ AbstractController.prototype.stop = function() {
 };
 
 AbstractController.prototype._initLoop = function() {
+    this.log("initializing loop");
     this._uploadFingerprint();
 };
 
 AbstractController.prototype._uploadFingerprint = function() {
 
+    this.log("uploading fingerprint");
     var fingerprinter = new (this.fingerprinterClass)(),
         self = this;
 
     fingerprinter.getFingerprint(function (fingerprint) {
+        self.log("got the fingerprint");
         var xhr = new XMLHttpRequest(),
             json,
             params;
@@ -87,14 +131,18 @@ AbstractController.prototype._uploadFingerprint = function() {
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
 
+                self.log("fingerprint xhr return " + xhr.status);
                 if (xhr.status === 200) {
                     try {
                         var response = JSON.parse(xhr.responseText),
                             browserId = response.payload.browserId,
                             fp = response.payload.fingerprint;
 
+                        self.log("fingerprint xhr ok");
+
                         if (! self.browserId) {
                             self._storeBrowserId(browserId, function () {
+                                self.log("storing new browserId");
                                 self._setInterval();
                             });
                         } else {
@@ -106,12 +154,14 @@ AbstractController.prototype._uploadFingerprint = function() {
                         });
 
                         if (self._hasFlash(REQUIRED_FLASH_VERSION)) {
+                            self.log("starting flash fingerprint delivery");
                             self._sendFlashFingerprint(
                                 response.payload.fingerprintId
                             );
                         }
 
                     } catch (e) {
+                        self.log("fingerprint xhr invalid json");
                         self._setInterval();
                     }
                 } else {
@@ -120,13 +170,14 @@ AbstractController.prototype._uploadFingerprint = function() {
             }
         };
 
+        self.log("sending fingerprint xhr");
         xhr.send(params);
     });
 };
 
 AbstractController.prototype._setInterval = function() {
     var self = this;
-
+    this.log("setting up the main interval");
     if (this.interval === null) {
         this.interval = setInterval(function () {
             self._uploadFingerprint();
@@ -165,6 +216,7 @@ AbstractController.prototype._sendFlashFingerprint = function(fingerprintId) {
     var self = this;
 
     function send () {
+        self.log("sending message to the iframe to deliver the flash fp");
         self._iframe.removeEventListener('load', send, false);
 
         self._sendMessageToIframe({
