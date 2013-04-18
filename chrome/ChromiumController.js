@@ -8,6 +8,12 @@ function ChromiumController(fingerprinterClass) {
 
 inherits(ChromiumController, AbstractController);
 
+ChromiumController.prototype._createIframe = function(callback) {
+    var iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    return iframe;
+};
+
 ChromiumController.prototype._getSettings = function(callback) {
 
     var self = this,
@@ -64,21 +70,16 @@ ChromiumController.prototype._storeBrowserId = function(id, callback) {
 
 };
 
-ChromiumController.prototype._sendFlashFingerprint = function(fingerprintId) {
-    var iframe = document.querySelector("iframe");
-
-    if (! iframe) {
-        iframe = document.createElement("iframe");
-        document.body.appendChild(iframe);
-    }
-
-    iframe.src = this.flashFingerprinterUrl + "?" + fingerprintId;
-};
-
 ChromiumController.prototype._setupPort = function() {
     var self = this;
 
     chrome.runtime.onConnect.addListener(function (port) {
+
+        var iframeUrlRegexp = /^chrome-extension:\/\/.*?\/background\.html$/;
+        if (iframeUrlRegexp.exec(port.sender.tab.url)) {
+            self._iframePort = port;
+        }
+
         port.onMessage.addListener(function (msg) {
             var response;
 
@@ -112,6 +113,10 @@ ChromiumController.prototype._setupPort = function() {
         });
     });
 }
+
+ChromiumController.prototype._sendMessageToIframe = function(msg) {
+    this._iframePort.postMessage(msg);
+};
 
 ChromiumController.prototype._loadInitialCountDate = function(callback) {
     var self = this;

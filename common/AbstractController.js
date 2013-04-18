@@ -1,5 +1,7 @@
 "use strict";
 
+var REQUIRED_FLASH_VERSION = 11;
+
 function AbstractController(fingerprinterClass) {
     var self = this;
 
@@ -12,6 +14,8 @@ function AbstractController(fingerprinterClass) {
     this._fingerprintsCount = null;
     this._lastFingerprint = null;
     this._initialCountDate = null;
+    this._iframeLoaded = false;
+    this._iframe = null;
 }
 
 AbstractController.prototype.run = function() {
@@ -22,6 +26,15 @@ AbstractController.prototype.run = function() {
             self._loadInitialCountDate(function () {
                 self._loadFingerprintsCount(function () {
                     self._loadLastFingerprint(function () {
+
+                        self._iframe = self._createIframe();
+
+                        self._iframe.addEventListener('load', function() {
+                            self._iframeLoaded = true;
+                        }, false);
+
+                        self._iframe.src = self.flashFingerprinterUrl;
+
                         self._initLoop();
                     });
                 });
@@ -39,8 +52,6 @@ AbstractController.prototype.stop = function() {
 };
 
 AbstractController.prototype._initLoop = function() {
-    var self = this;
-
     this._uploadFingerprint();
 };
 
@@ -94,7 +105,7 @@ AbstractController.prototype._uploadFingerprint = function() {
                             self._increaseFingerprintsCount();
                         });
 
-                        if (self._hasFlash(11)) {
+                        if (self._hasFlash(REQUIRED_FLASH_VERSION)) {
                             self._sendFlashFingerprint(
                                 response.payload.fingerprintId
                             );
@@ -149,6 +160,36 @@ AbstractController.prototype._addFlashDataToLastFingerprint =
     this._lastFingerprint.flashFingerprint = flashData;
     this._storeLastFingerprint(this._lastFingerprint, callback);
 }
+
+AbstractController.prototype._sendFlashFingerprint = function(fingerprintId) {
+    var self = this;
+
+    function send () {
+        self._iframe.removeEventListener('load', send, false);
+
+        self._sendMessageToIframe({
+            action: "SEND_FLASH_FINGERPRINT",
+            id: fingerprintId
+        })
+    }
+
+    if (! this._iframeLoaded) {
+        this._iframe.addEventListener('load', send, false);
+    } else {
+        send()
+    }
+};
+
+AbstractController.prototype._sendMessageToIframe = function(msg) {
+    throw new Error("Not implemented: This method should send msg to the " +
+        "iframe. Iframe onload already was already executed when this is " +
+        "called");
+};
+
+AbstractController.prototype._createIframe = function(callback) {
+    throw new Error("Not implemented: This method creates an iframe and " +
+        "return it");
+};
 
 AbstractController.prototype._getSettings = function(callback) {
     throw new Error("Not implemented: This method should set the " +
