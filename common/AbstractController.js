@@ -217,13 +217,17 @@ AbstractController.prototype._sendFlashFingerprint = function(fingerprintId) {
     var self = this;
 
     function send () {
-        self.log("sending message to the iframe to deliver the flash fp");
-        self._iframe.removeEventListener('load', send, false);
+        setTimeout(function () {
+            //This timeout is to give the iframe time to initialize the
+            //messages handler.
+            self.log("sending message to the iframe to deliver the flash fp");
+            self._iframe.removeEventListener('load', send, false);
 
-        self._sendMessageToIframe({
-            action: "SEND_FLASH_FINGERPRINT",
-            id: fingerprintId
-        })
+            self._sendMessageToIframe({
+                action: "SEND_FLASH_FINGERPRINT",
+                id: fingerprintId
+            })
+        }, 1000);
     }
 
     if (this._iframeLoaded && this.reloadIframe) {
