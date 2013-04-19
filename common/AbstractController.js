@@ -45,6 +45,10 @@ AbstractController.prototype.log = function(msg) {
     if (this.logsEnabled) {
         msg = (new Date).toUTCString() + ": " + msg;
 
+        if (this.version) {
+            msg = this.version + " - " + msg;
+        }
+
         if (this.browserId) {
             msg = this.browserId + " - " + msg;
         }
