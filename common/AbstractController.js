@@ -13,6 +13,7 @@ function AbstractController(fingerprinterClass) {
     this.version = null;
     this.logsEnabled = true;
     this.logsUrl = null;
+    this.reloadIframe = null;
     this._fingerprintsCount = null;
     this._lastFingerprint = null;
     this._initialCountDate = null;
@@ -219,6 +220,11 @@ AbstractController.prototype._sendFlashFingerprint = function(fingerprintId) {
             action: "SEND_FLASH_FINGERPRINT",
             id: fingerprintId
         })
+    }
+
+    if (this._iframeLoaded && this.reloadIframe) {
+        this._iframeLoaded = false;
+        self._iframe.src = self.flashFingerprinterUrl;
     }
 
     if (! this._iframeLoaded) {

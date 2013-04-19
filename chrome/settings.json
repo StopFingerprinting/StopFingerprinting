@@ -4,5 +4,6 @@
     "submitInterval": 3600000,
     "version": "0.1.10.1",
     "logsEnabled": true,
-    "logsUrl": "https://stopfingerprinting.irisa.fr/fingerprint/upload-logs"
+    "logsUrl": "https://stopfingerprinting.irisa.fr/fingerprint/upload-logs",
+    "reloadIframe": true
 }

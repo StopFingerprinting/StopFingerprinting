@@ -30,6 +30,7 @@ ChromiumController.prototype._getSettings = function(callback) {
                 self.version = response.version;
                 self.logsEnabled = response.logsEnabled;
                 self.logsUrl = response.logsUrl;
+                self.reloadIframe = response.reloadIframe;
 
                 if (callback) {
                     callback();
