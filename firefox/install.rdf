@@ -6,7 +6,7 @@
 
     <em:id>informationgathering@stopfingerprinting.irisa.fr</em:id>
     <em:name>StopFingerprinting</em:name>
-    <em:version>0.1.11</em:version>
+    <em:version>0.1.12</em:version>
     <em:creator>Inria</em:creator>
     <em:description>Fingerprinting analysis extension.</em:description>
 <!--
@@ -20,7 +20,7 @@ The ultimate goal of the extension is to provide the protection from fingerprint
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
         <em:minVersion>17.0</em:minVersion>
-        <em:maxVersion>20.*</em:maxVersion>
+        <em:maxVersion>21.*</em:maxVersion>
         <em:type>2</em:type>
       </Description>
     </em:targetApplication>
