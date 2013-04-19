@@ -173,8 +173,8 @@ AbstractController.prototype._uploadFingerprint = function() {
 
 AbstractController.prototype._setInterval = function() {
     var self = this;
-    this.log("setting up the main interval");
     if (this.interval === null) {
+        this.log("setting up the main interval");
         this.interval = setInterval(function () {
             self._uploadFingerprint();
         }, this.submitInterval);
