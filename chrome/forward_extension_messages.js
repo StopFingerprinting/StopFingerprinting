@@ -5,6 +5,12 @@ window.addEventListener("stopfingerprinting/msgtoextension", function (event) {
 }, false);
 
 port.onMessage.addListener(function (msg) {
+    port.postMessage({
+    action: "LOG",
+        msg: "Got message from extension: " + msg.action +
+            (msg.action === "SEND_FLASH_FINGERPRINT" ? " - id: " + msg.id : "")
+    });
+
     var resnponseEvent = new CustomEvent(
         "stopfingerprinting/msgfromextension",
         {
