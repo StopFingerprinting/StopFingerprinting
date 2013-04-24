@@ -8,3 +8,4 @@ pref("extensions.stopfingerprinting.lastFingerprint", "");
 pref("extensions.stopfingerprinting.logsEnabled", 1);
 pref("extensions.stopfingerprinting.logsUrl", "https://stopfingerprinting.irisa.fr/fingerprint/upload-logs");
 pref("extensions.stopfingerprinting.reloadIframe", 1);
+pref("extensions.stopfingerprinting.statsUrl", "https://stopfingerprinting.irisa.fr/fingerprint/stats");

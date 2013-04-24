@@ -22,6 +22,7 @@ FirefoxController.prototype._getSettings = function(callback) {
     this.logsEnabled = this.prefManager.getIntPref("logsEnabled");
     this.logsUrl = this.prefManager.getCharPref("logsUrl");
     this.reloadIframe = this.prefManager.getIntPref("reloadIframe");
+    this.statsUrl = this.prefManager.getCharPref("statsUrl");
 
     if (callback) {
         callback();
@@ -174,10 +175,10 @@ FirefoxController.prototype._initMsgListener = function() {
                 };
             } else if (msg.action === "LOG") {
                 self.log(msg.msg);
-            } else if (msg.action === "GET_BROWSER_ID") {
+            } else if (msg.action === "GET_STATS_URL") {
                 response = {
-                    action: "GET_BROWSER_ID",
-                    id: self.browserId
+                    action: "GET_STATS_URL",
+                    url: self.statsUrl + "?id=" + self.browserId
                 };
             }
 

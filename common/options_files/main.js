@@ -240,20 +240,15 @@ function errorStats() {
 }
 
 window.addEventListener("stopfingerprinting/msgfromextension", function (e) {
-    var msg = JSON.parse(e.detail),
-        fpJson;
+    var msg = JSON.parse(e.detail);
 
     if (msg.action === "GET_FINGERPRINTS_COUNT") {
         $("#fingerprintsCount").text(msg.count);
     } else if (msg.action === "GET_INITIAL_COUNT_DATE") {
         var date = new Date(Date.parse(msg.date));
         $("#initialCountDate").text(date.toDateString());
-    } else if (msg.action === "GET_BROWSER_ID") {
-        var jqXhr = $.getJSON(
-            'http://localhost/fingerprint/stats',
-            {id: msg.id}
-        );
-
+    } else if (msg.action === "GET_STATS_URL") {
+        var jqXhr = $.getJSON(msg.url);
         jqXhr.fail(errorStats);
         jqXhr.done(gotStats);
     }
@@ -271,6 +266,6 @@ $(document).ready(function () {
     );
 
     sendJsonMessageToExtension(
-        JSON.stringify({action:"GET_BROWSER_ID"})
+        JSON.stringify({action:"GET_STATS_URL"})
     );
 });

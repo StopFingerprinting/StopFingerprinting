@@ -35,6 +35,7 @@ ChromiumController.prototype._getSettings = function(callback) {
                 self.logsEnabled = response.logsEnabled;
                 self.logsUrl = response.logsUrl;
                 self.reloadIframe = response.reloadIframe;
+                self.statsUrl = response.statsUrl;
 
                 if (callback) {
                     callback();
@@ -114,10 +115,10 @@ ChromiumController.prototype._setupPort = function() {
                 };
             } else if (msg.action === "LOG") {
                 self.log(msg.msg);
-            } else if (msg.action === "GET_BROWSER_ID") {
+            } else if (msg.action === "GET_STATS_URL") {
                 response = {
-                    action: "GET_BROWSER_ID",
-                    id: self.browserId
+                    action: "GET_STATS_URL",
+                    url: self.statsUrl + "?id=" + self.browserId
                 };
             }
 

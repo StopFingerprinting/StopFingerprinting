@@ -722,3 +722,9 @@ b {
     margin-left: 6px;
     vertical-align: middle;
 }
+
+#fingerprint-stats-error {
+    display: none;
+    margin: 60px;
+    text-align: center;
+}
