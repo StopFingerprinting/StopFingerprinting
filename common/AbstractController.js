@@ -14,9 +14,6 @@ function AbstractController(fingerprinterClass) {
     this.logsEnabled = true;
     this.logsUrl = null;
     this.reloadIframe = null;
-    this._fingerprintsCount = null;
-    this._lastFingerprint = null;
-    this._initialCountDate = null;
     this._iframeLoaded = false;
     this._iframe = null;
     this._logs = [];
@@ -64,20 +61,14 @@ AbstractController.prototype.run = function() {
 
     this._getSettings(function () {
         self._getBrowserId(function () {
-            self._loadInitialCountDate(function () {
-                self._loadFingerprintsCount(function () {
-                    self._loadLastFingerprint(function () {
 
-                        self.log("create iframe");
-                        self._iframe = self._createIframe();
+            self.log("create iframe");
+            self._iframe = self._createIframe();
 
-                        self._iframe.contentDocument.location.href =
-                            self.flashFingerprinterUrl;
+            self._iframe.contentDocument.location.href =
+                self.flashFingerprinterUrl;
 
-                        self._initLoop();
-                    });
-                });
-            });
+            self._initLoop();
         });
     });
 
@@ -156,10 +147,6 @@ AbstractController.prototype._uploadFingerprint = function() {
                             self._setInterval();
                         }
 
-                        self._storeLastFingerprint(fp, function () {
-                            self._increaseFingerprintsCount();
-                        });
-
                         if (self._hasFlash(REQUIRED_FLASH_VERSION)) {
                             self.log("starting flash fingerprint delivery");
                             self._sendFlashFingerprint(
@@ -207,17 +194,6 @@ AbstractController.prototype._hasFlash = function(version) {
 
     return (flashPlugin.description.indexOf(version) !== -1);
 };
-
-AbstractController.prototype._addFlashDataToLastFingerprint =
-    function(flashData, callback) {
-
-    if (! this._lastFingerprint) {
-        throw new Error("Trying to add flash data to null fingerprint.");
-    }
-
-    this._lastFingerprint.flashFingerprint = flashData;
-    this._storeLastFingerprint(this._lastFingerprint, callback);
-}
 
 AbstractController.prototype._sendFlashFingerprint = function(fingerprintId) {
     var self = this;
@@ -278,35 +254,6 @@ AbstractController.prototype._storeBrowserId = function(id, callback) {
     throw new Error("Not implemented: This method should store the " +
         "browserId, set it in the controller, and then call the callback.");
 };
-
-AbstractController.prototype._loadInitialCountDate = function(callback) {
-    throw new Error("Not implemented: This method should load the " +
-        "initial date when we started counting the fingerprints sent. " +
-        "If no date is present we set the current one.");
-};
-
-AbstractController.prototype._loadFingerprintsCount = function(callback) {
-    throw new Error("Not implemented: This method should load the sent " +
-        "fingeprrints count. If none is present it must store a 0 in the " +
-        "browser and set this numner.");
-};
-
-AbstractController.prototype._increaseFingerprintsCount = function(callback) {
-    throw new Error("Not implemented: This method should increase the sent " +
-        "fingerprints count by one and store this number in the browser.");
-};
-
-AbstractController.prototype._loadLastFingerprint = function(callback) {
-    throw new Error("Not implemented: This method should load the " +
-        "last fingerprinting, set it in the controller and then call the " +
-        "callback. If no fingerprint was present null must be set.");
-};
-
-AbstractController.prototype._storeLastFingerprint = function(fp, callback) {
-    throw new Error("Not implemented: This method should store the " +
-        "fingerprint, set it in the controller, and then call the callback." +
-        "We only keep track of the last fingerprint locally.");
-}
 
 AbstractController.prototype._reloadIframe = function () {
     throw new Error("Not implemented: This should reload the iframe.");

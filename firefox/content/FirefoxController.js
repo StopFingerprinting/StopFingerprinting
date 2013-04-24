@@ -90,62 +90,6 @@ FirefoxController.prototype._sendMessageToIframe = function(msg) {
     this._iframe.contentDocument.dispatchEvent(resnponseEvent);
 };
 
-FirefoxController.prototype._loadInitialCountDate = function(callback) {
-    var date;
-
-    try {
-        var dateStr = this.prefManager.getCharPref("initialCountDate");
-        date = new Date(Date.parse(dateStr));
-    } catch (Error) {
-        date = new Date();
-        this.prefManager.setIntPref("initialCountDate", date.toJSON());
-    }
-
-    this._initialCountDate = date;
-
-    if (callback) {
-        callback();
-    }
-};
-
-FirefoxController.prototype._loadFingerprintsCount = function(callback) {
-    this._fingerprintsCount = this.prefManager.getIntPref("fingerprintsCount");
-
-    if (callback) {
-        callback();
-    }
-};
-
-FirefoxController.prototype._increaseFingerprintsCount = function(callback) {
-    this._fingerprintsCount += 1;
-    this.prefManager.setIntPref("fingerprintsCount", this._fingerprintsCount);
-
-    if (callback) {
-        callback();
-    }
-};
-
-FirefoxController.prototype._loadLastFingerprint = function(callback) {
-    var fp = this.prefManager.getCharPref("lastFingerprint");
-
-    if (fp) {
-        this._lastFingerprint = fp;
-    }
-
-    if (callback) {
-        callback();
-    }
-};
-
-FirefoxController.prototype._storeLastFingerprint = function(fp, callback) {
-    this.prefManager.setCharPref("lastFingerprint", fp);
-    this._lastFingerprint = fp;
-
-    if (callback) {
-        callback();
-    }
-}
-
 FirefoxController.prototype._initMsgListener = function() {
     var self = this;
     document.addEventListener(
@@ -154,26 +98,7 @@ FirefoxController.prototype._initMsgListener = function() {
             var msg = JSON.parse(event.detail),
                 response;
 
-
-            if (msg.action === "STORE_FLASH_FINGERPRINT") {
-                self._addFlashDataToLastFingerprint(msg.data);
-
-            } else if (msg.action === "GET_FINGERPRINTS_COUNT") {
-                response = {
-                    action: "GET_FINGERPRINTS_COUNT",
-                    count: self._fingerprintsCount
-                };
-            } else if (msg.action === "GET_INITIAL_COUNT_DATE") {
-                response = {
-                    action: "GET_INITIAL_COUNT_DATE",
-                    date: self._initialCountDate
-                };
-            } else if (msg.action === "GET_LAST_FINGERPRINT") {
-                response = {
-                    action: "GET_LAST_FINGERPRINT",
-                    fp: self._lastFingerprint
-                };
-            } else if (msg.action === "LOG") {
+            if (msg.action === "LOG") {
                 self.log(msg.msg);
             } else if (msg.action === "GET_STATS_URL") {
                 response = {
