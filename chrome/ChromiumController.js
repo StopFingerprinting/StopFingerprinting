@@ -9,7 +9,11 @@ function ChromiumController(fingerprinterClass) {
 inherits(ChromiumController, AbstractController);
 
 ChromiumController.prototype._createIframe = function(callback) {
-    var iframe = document.createElement("iframe");
+    var iframe = document.createElement("iframe"),
+        self = this;
+    iframe.addEventListener("load", function () {
+        self._iframeLoadedEvent();
+    }, false);
     document.body.appendChild(iframe);
     return iframe;
 };
@@ -110,6 +114,11 @@ ChromiumController.prototype._setupPort = function() {
                 };
             } else if (msg.action === "LOG") {
                 self.log(msg.msg);
+            } else if (msg.action === "GET_BROWSER_ID") {
+                response = {
+                    action: "GET_BROWSER_ID",
+                    id: self.browserId
+                };
             }
 
             if (response) {
@@ -213,4 +222,8 @@ ChromiumController.prototype._storeLastFingerprint = function(fp, callback) {
             callback();
         }
     });
+}
+
+ChromiumController.prototype._reloadIframe = function() {
+    this._iframe.src = this.flashFingerprinterUrl;
 }

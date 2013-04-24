@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>StopFingerprinting | Options</title>
         <link rel="stylesheet" type="text/css" media="all" href="options_files/style.css">
+        <link rel="stylesheet" href="options_files/jquery.qtip.css" type="text/css" media="screen" />
     </head>
 
     <body>
@@ -27,9 +28,29 @@
 
                 <p>You can see here how your current one looks!</p>
 
-                <h4>Your current fingerprint</h4>
+                <div id="fploading">
+                    <img src="options_files/loading.gif">
+                </div>
 
-                <pre><code></code></pre>
+                <div id="fingerprint-stats">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Current value</th>
+                                <th>Number of bits it gives</th>
+                                <th>Bits it gave last week</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div id="fingerprint-stats">
+                    An error ocurred, please try again later.
+                </div>
             </section>
         </div>
 
@@ -50,6 +71,8 @@
         </div>
 
         <script src="options_files/jquery-1.9.1.min.js"></script>
+        <script src="options_files/jquery.browser.js"></script>
+        <script type="text/javascript" src="options_files/jquery.qtip.js"></script>
         <script src="../forward_extension_messages.js"></script>
         <script src="options_files/main.js"></script>
     </body>

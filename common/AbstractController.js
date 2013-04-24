@@ -20,6 +20,7 @@ function AbstractController(fingerprinterClass) {
     this._iframeLoaded = false;
     this._iframe = null;
     this._logs = [];
+    this._iframeLoadedCallback = null;
 
     window.setInterval(function () {
         if (self._logs.length && self.logsUrl) {
@@ -39,6 +40,7 @@ function AbstractController(fingerprinterClass) {
         }
     }, 10 * 1000);
 }
+
 
 
 AbstractController.prototype.log = function(msg) {
@@ -69,12 +71,8 @@ AbstractController.prototype.run = function() {
                         self.log("create iframe");
                         self._iframe = self._createIframe();
 
-                        self._iframe.addEventListener('load', function() {
-                            self.log("iframe loaded");
-                            self._iframeLoaded = true;
-                        }, false);
-
-                        self._iframe.src = self.flashFingerprinterUrl;
+                        self._iframe.contentDocument.location.href =
+                            self.flashFingerprinterUrl;
 
                         self._initLoop();
                     });
@@ -92,6 +90,14 @@ AbstractController.prototype.stop = function() {
         this.interval = null;
     }
 };
+
+AbstractController.prototype._iframeLoadedEvent = function() {
+    this._iframeLoaded = true;
+
+    if (this._iframeLoadedCallback) {
+        this._iframeLoadedCallback();
+    }
+}
 
 AbstractController.prototype._initLoop = function() {
     this.log("initializing loop");
@@ -162,7 +168,7 @@ AbstractController.prototype._uploadFingerprint = function() {
                         }
 
                     } catch (e) {
-                        self.log("fingerprint xhr invalid json");
+                        self.log("Unknown error: " + e);
                         self._setInterval();
                     }
                 } else {
@@ -227,18 +233,21 @@ AbstractController.prototype._sendFlashFingerprint = function(fingerprintId) {
                 action: "SEND_FLASH_FINGERPRINT",
                 id: fingerprintId
             })
+
+            self._iframeLoadedCallback = null;
         }, 1000);
     }
 
-    if (this._iframeLoaded && this.reloadIframe) {
-        this._iframeLoaded = false;
-        self._iframe.src = self.flashFingerprinterUrl;
-    }
-
     if (! this._iframeLoaded) {
-        this._iframe.addEventListener('load', send, false);
+        this._iframeLoadedCallback = send;
     } else {
-        send()
+        if (this.reloadIframe) {
+            this._iframeLoaded = false;
+            this._iframeLoadedCallback = send;
+            this._reloadIframe();
+        } else {
+            send();
+        }
     }
 };
 
@@ -250,7 +259,8 @@ AbstractController.prototype._sendMessageToIframe = function(msg) {
 
 AbstractController.prototype._createIframe = function(callback) {
     throw new Error("Not implemented: This method creates an iframe and " +
-        "return it");
+        "return it. This should set the onload callback of the iframe to " +
+        "this._iframeLoadedEvent.");
 };
 
 AbstractController.prototype._getSettings = function(callback) {
@@ -296,4 +306,8 @@ AbstractController.prototype._storeLastFingerprint = function(fp, callback) {
     throw new Error("Not implemented: This method should store the " +
         "fingerprint, set it in the controller, and then call the callback." +
         "We only keep track of the last fingerprint locally.");
+}
+
+AbstractController.prototype._reloadIframe = function () {
+    throw new Error("Not implemented: This should reload the iframe.");
 }

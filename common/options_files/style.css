@@ -611,3 +611,114 @@ code {
 b {
     font-weight: bold;
 }
+
+#fploading {
+    text-align: center;
+    margin: 30px 0 10px 0;
+}
+
+#fingerprint-stats table,
+#fingerprint-stats tr,
+#fingerprint-stats th,
+#fingerprint-stats td {
+    border-color: #000 !important;
+}
+
+#fingerprint-stats thead th {
+    border-left: 1px solid;
+    border-bottom: 1px solid;
+    font-weight: bold;
+}
+
+#fingerprint-stats th,
+#fingerprint-stats td {
+    font-size: 12px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#fingerprint-stats tbody tr:nth-child(2n) {
+    background: #F9F9F9;
+}
+
+#fingerprint-stats {
+    display: none;
+    margin-top: 30px;
+}
+
+#fingerprint-stats .bits-number {
+    font-weight: bold;
+}
+
+#fingerprint-stats .difference {
+    vertical-align: middle;
+    font-size: 2em;
+    padding-left: 5px;
+}
+
+#fingerprint-stats .up {
+    color: #BB0000;
+}
+
+#fingerprint-stats .down {
+    color: green;
+}
+
+#fingerprint-stats .equal {
+    color: #0000BB;
+}
+
+#fingerprint-stats .feature-value {
+    display: inline-block;
+    max-width: 190px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-right: 5px;
+    line-height: 28px;
+    vertical-align: middle;
+}
+
+#fingerprint-stats .more {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 1.5em;
+    text-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+    cursor: pointer;
+    line-height: 28px;
+    vertical-align: middle;
+}
+
+#fingerprint-stats .value-column {
+    width: 210px;
+}
+
+
+.current-bits {
+    text-align: left !important;
+    padding-left: 35px !important;
+    width: 65px;
+}
+
+.value-expanded {
+    width: 600px !important;
+    max-width: 600px !important;
+    max-height: 500px !important;
+    border: #AAA  !important;
+    background: #FFF !important;
+}
+
+.value-expanded div {
+    word-wrap: normal !important;
+}
+
+.value-expanded code {
+    max-width: 555px;
+    overflow: auto;
+}
+
+.flash-icon {
+    display: inline-block;
+    margin-left: 6px;
+    vertical-align: middle;
+}

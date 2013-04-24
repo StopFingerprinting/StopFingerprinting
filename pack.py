@@ -223,6 +223,13 @@ def check_firefox_submit_interval():
     return definition in f.read()
 
 
+def check_firefox_logs_url():
+    f = open(__dir__ + "/firefox/defaults/preferences/defaults.js", "rt")
+    definition = 'pref("extensions.stopfingerprinting.logsUrl", "' + \
+        str(LOGS_URL) + '"");'
+    return definition in f.read()
+
+
 def pack_firefox(version):
     zip = zipfile.ZipFile(
         'stopfingerprinting-firefox-' + version + '.xpi', 'w'
@@ -293,6 +300,10 @@ def main(version):
 
     if not check_firefox_submit_url():
         print "Firefox submit url doesn't match"
+        sys.exit(1)
+
+    if not check_firefox_logs_url():
+        print "Firefox logs url doesn't match"
         sys.exit(1)
 
     if not check_firefox_flash_fingerprinter_url():

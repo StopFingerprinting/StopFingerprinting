@@ -19,6 +19,9 @@ FirefoxController.prototype._getSettings = function(callback) {
     this.flashFingerprinterUrl = this.prefManager
         .getCharPref("flashFingerprinterUrl");
     this.version = this.prefManager.getCharPref("version");
+    this.logsEnabled = this.prefManager.getIntPref("logsEnabled");
+    this.logsUrl = this.prefManager.getCharPref("logsUrl");
+    this.reloadIframe = this.prefManager.getIntPref("reloadIframe");
 
     if (callback) {
         callback();
@@ -56,26 +59,34 @@ FirefoxController.prototype._storeBrowserId = function(id, callback) {
     }
 };
 
-FirefoxController.prototype._sendFlashFingerprint = function(fingerprintId) {
+FirefoxController.prototype._createIframe = function() {
+    var iframe = document.createElement("iframe"),
+        self = this;
+    iframe.setAttribute("id", "stopfingerprinting-frame");
+    iframe.setAttribute("name", "stopfingerprinting-frame");
+    iframe.setAttribute("type", "content");
+    iframe.setAttribute("collapsed", "true");
 
-    var frame = this._getIframe();
-    frame.contentDocument.location.href = this.flashFingerprinterUrl + "?" +
-        fingerprintId;
+    iframe.addEventListener("DOMContentLoaded", function () {
+        self._iframeLoadedEvent();
+    }, false);
+
+    document.getElementById("main-window").appendChild(iframe);
+
+    return iframe;
 };
 
+FirefoxController.prototype._sendMessageToIframe = function(msg) {
+    var resnponseEvent = new CustomEvent(
+        "stopfingerprinting/msgfromextension",
+        {
+            bubbles:true,
+            cancelable:false,
+            detail: JSON.stringify(msg)
+        }
+    );
 
-FirefoxController.prototype._getIframe = function() {
-
-    if (! this.frame) {
-        this.frame = document.createElement("iframe");
-        this.frame.setAttribute("id", "stopfingerprinting-frame");
-        this.frame.setAttribute("name", "stopfingerprinting-frame");
-        this.frame.setAttribute("type", "content");
-        this.frame.setAttribute("collapsed", "true");
-        document.getElementById("main-window").appendChild(this.frame);
-    }
-
-    return this.frame;
+    this._iframe.contentDocument.dispatchEvent(resnponseEvent);
 };
 
 FirefoxController.prototype._loadInitialCountDate = function(callback) {
@@ -161,6 +172,13 @@ FirefoxController.prototype._initMsgListener = function() {
                     action: "GET_LAST_FINGERPRINT",
                     fp: self._lastFingerprint
                 };
+            } else if (msg.action === "LOG") {
+                self.log(msg.msg);
+            } else if (msg.action === "GET_BROWSER_ID") {
+                response = {
+                    action: "GET_BROWSER_ID",
+                    id: self.browserId
+                };
             }
 
             if (response) {
@@ -179,4 +197,8 @@ FirefoxController.prototype._initMsgListener = function() {
         false,
         true
     );
+}
+
+FirefoxController.prototype._reloadIframe = function() {
+    this._iframe.contentDocument.location.href = this.flashFingerprinterUrl;
 }
