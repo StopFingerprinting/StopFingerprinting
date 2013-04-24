@@ -226,7 +226,7 @@ def check_firefox_submit_interval():
 def check_firefox_logs_url():
     f = open(__dir__ + "/firefox/defaults/preferences/defaults.js", "rt")
     definition = 'pref("extensions.stopfingerprinting.logsUrl", "' + \
-        str(LOGS_URL) + '"");'
+        str(LOGS_URL) + '");'
     return definition in f.read()
 
 
