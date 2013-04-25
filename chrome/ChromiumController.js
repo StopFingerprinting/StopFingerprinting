@@ -3,6 +3,7 @@
 function ChromiumController(fingerprinterClass) {
     AbstractController.call(this, fingerprinterClass);
     this.browser = "Chrome";
+    this._iframePort = null;
     this._setupPort();
 }
 
@@ -98,6 +99,27 @@ ChromiumController.prototype._setupPort = function() {
                     action: "GET_STATS_URL",
                     url: self.statsUrl + "?id=" + self.browserId
                 };
+            } else if (msg.action === "TEST_FP") {
+                self._uploadFingerprint(
+                    function javascriptFpCallback (success) {
+                        port.postMessage({
+                            action: "TEST_JS_FP",
+                            success: success
+                        });
+                    },
+                    function flashFpCallback (success) {
+                        port.postMessage({
+                            action: "TEST_FLASH_FP",
+                            success: success
+                        });
+                    },
+                    true
+                );
+            } else if (msg.action === "STORE_FLASH_FINGERPRINT") {
+                if (self._flashFpCallback) {
+                    self._flashFpCallback(true);
+                    self._flashFpCallback = null;
+                }
             }
 
             if (response) {

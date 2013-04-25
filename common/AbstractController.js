@@ -18,6 +18,7 @@ function AbstractController(fingerprinterClass) {
     this._iframe = null;
     this._logs = [];
     this._iframeLoadedCallback = null;
+    this._flashFpCallback = null;
 
     window.setInterval(function () {
         if (self._logs.length && self.logsUrl) {
@@ -95,7 +96,8 @@ AbstractController.prototype._initLoop = function() {
     this._uploadFingerprint();
 };
 
-AbstractController.prototype._uploadFingerprint = function() {
+AbstractController.prototype._uploadFingerprint = function(javascriptFpCallback,
+    flashFpCallback, dontReloadIframe) {
 
     this.log("uploading fingerprint");
     var fingerprinter = new (this.fingerprinterClass)(),
@@ -147,18 +149,36 @@ AbstractController.prototype._uploadFingerprint = function() {
                             self._setInterval();
                         }
 
+                        if (javascriptFpCallback) {
+                            javascriptFpCallback(true);
+                        }
+
                         if (self._hasFlash(REQUIRED_FLASH_VERSION)) {
                             self.log("starting flash fingerprint delivery");
                             self._sendFlashFingerprint(
-                                response.payload.fingerprintId
+                                response.payload.fingerprintId,
+                                flashFpCallback,
+                                dontReloadIframe
                             );
+                        } else {
+                            if (flashFpCallback) {
+                                flashFpCallback(false);
+                            }
                         }
 
                     } catch (e) {
+                        if (javascriptFpCallback) {
+                            javascriptFpCallback(false);
+                        }
+
                         self.log("Unknown error: " + e);
                         self._setInterval();
                     }
                 } else {
+                    if (javascriptFpCallback) {
+                        javascriptFpCallback(false);
+                    }
+
                     self._setInterval();
                 }
             }
@@ -195,7 +215,9 @@ AbstractController.prototype._hasFlash = function(version) {
     return (flashPlugin.description.indexOf(version) !== -1);
 };
 
-AbstractController.prototype._sendFlashFingerprint = function(fingerprintId) {
+AbstractController.prototype._sendFlashFingerprint = function(fingerprintId,
+    flashFpCallback, dontReloadIframe) {
+
     var self = this;
 
     function send () {
@@ -211,13 +233,14 @@ AbstractController.prototype._sendFlashFingerprint = function(fingerprintId) {
             })
 
             self._iframeLoadedCallback = null;
+            self._flashFpCallback  = flashFpCallback;
         }, 1000);
     }
 
     if (! this._iframeLoaded) {
         this._iframeLoadedCallback = send;
     } else {
-        if (this.reloadIframe) {
+        if (this.reloadIframe && (! dontReloadIframe)) {
             this._iframeLoaded = false;
             this._iframeLoadedCallback = send;
             this._reloadIframe();

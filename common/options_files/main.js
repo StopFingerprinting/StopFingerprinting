@@ -239,33 +239,72 @@ function errorStats() {
     $("#fingerprint-stats-error").show();
 }
 
+
+var TEST_FLASH_FP_TIME_LIMIT = 7000,
+    testFlashFpTimeout;
+
 window.addEventListener("stopfingerprinting/msgfromextension", function (e) {
     var msg = JSON.parse(e.detail);
 
-    if (msg.action === "GET_FINGERPRINTS_COUNT") {
-        $("#fingerprintsCount").text(msg.count);
-    } else if (msg.action === "GET_INITIAL_COUNT_DATE") {
-        var date = new Date(Date.parse(msg.date));
-        $("#initialCountDate").text(date.toDateString());
-    } else if (msg.action === "GET_STATS_URL") {
+    if (msg.action === "GET_STATS_URL") {
         var jqXhr = $.getJSON(msg.url);
         jqXhr.fail(errorStats);
         jqXhr.done(gotStats);
+    } else if (msg.action === "TEST_JS_FP") {
+        $("#fp-js-test-loading").hide();
+
+        if (msg.success) {
+            $("#fp-js-test-ok").show();
+        } else {
+            $("#fp-js-test-error").show();
+            $("#fp-flash-test-loading").hide();
+            $("#fp-flash-test-error").show();
+            clearTimeout(testFlashFpTimeout);
+            testFlashFpTimeout = 0;
+        }
+    } else if (msg.action === "TEST_FLASH_FP") {
+        if (testFlashFpTimeout) {
+            clearTimeout(testFlashFpTimeout);
+            testFlashFpTimeout = 0;
+
+            $("#fp-flash-test-loading").hide();
+
+            if (msg.success) {
+                $("#fp-flash-test-ok").show();
+            } else {
+                $("#fp-flash-test-error").show();
+            }
+        }
     }
+
 }, false);
 
 
 
 $(document).ready(function () {
     sendJsonMessageToExtension(
-        JSON.stringify({action:"GET_FINGERPRINTS_COUNT"})
-    );
-
-    sendJsonMessageToExtension(
-        JSON.stringify({action:"GET_INITIAL_COUNT_DATE"})
-    );
-
-    sendJsonMessageToExtension(
         JSON.stringify({action:"GET_STATS_URL"})
     );
+
+    $("#fp-test a").click(function (event) {
+        event.preventDefault();
+        $("#fp-test-progress .loading").show();
+        $("#fp-test-progress .loaded").hide();
+        $("#fp-test-progress").show();
+        sendJsonMessageToExtension(
+            JSON.stringify({action:"TEST_FP"})
+        );
+
+        if (testFlashFpTimeout) {
+            clearTimeout(testFlashFpTimeout);
+            testFlashFpTimeout = 0;
+        }
+
+        testFlashFpTimeout = setTimeout(function () {
+            testFlashFpTimeout = 0;
+            $("#fp-flash-test-loading").hide();
+            $("#fp-flash-test-ok").hide();
+            $("#fp-flash-test-error").show();
+        }, TEST_FLASH_FP_TIME_LIMIT);
+    });
 });

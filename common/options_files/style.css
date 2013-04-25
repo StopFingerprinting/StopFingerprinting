@@ -728,3 +728,25 @@ b {
     margin: 60px;
     text-align: center;
 }
+
+#fp-test li {
+    font-size: 13px;
+    list-style: none;
+    margin-left: 210px;
+}
+
+#fp-test img {
+    vertical-align: middle;
+}
+
+#fp-test .loaded span {
+    font-size: 13px;
+    width: 13px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#fp-test-progress {
+    display: none;
+}

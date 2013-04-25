@@ -105,6 +105,45 @@ FirefoxController.prototype._initMsgListener = function() {
                     action: "GET_STATS_URL",
                     url: self.statsUrl + "?id=" + self.browserId
                 };
+            } else if (msg.action === "TEST_FP") {
+                self._uploadFingerprint(
+                    function javascriptFpCallback (success) {
+                        var resnponseEvent = new CustomEvent(
+                            "stopfingerprinting/msgfromextension",
+                            {
+                                bubbles:true,
+                                cancelable:false,
+                                detail: JSON.stringify({
+                                    action: "TEST_JS_FP",
+                                    success: success
+                                })
+                            }
+                        );
+
+                        event.target.dispatchEvent(resnponseEvent);
+                    },
+                    function flashFpCallback (success) {
+                        var resnponseEvent = new CustomEvent(
+                            "stopfingerprinting/msgfromextension",
+                            {
+                                bubbles:true,
+                                cancelable:false,
+                                detail: JSON.stringify({
+                                    action: "TEST_FLASH_FP",
+                                    success: success
+                                })
+                            }
+                        );
+
+                        event.target.dispatchEvent(resnponseEvent);
+                    },
+                    true
+                );
+            } else if (msg.action === "STORE_FLASH_FINGERPRINT") {
+                if (self._flashFpCallback) {
+                    self._flashFpCallback(true);
+                    self._flashFpCallback = null;
+                }
             }
 
             if (response) {
