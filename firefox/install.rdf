@@ -6,7 +6,7 @@
 
     <em:id>informationgathering@stopfingerprinting.irisa.fr</em:id>
     <em:name>StopFingerprinting</em:name>
-    <em:version>0.1.14</em:version>
+    <em:version>0.1.15</em:version>
     <em:creator>Inria</em:creator>
     <em:description>Fingerprinting analysis extension.</em:description>
     <em:homepageURL>https://stopfingerprinting.inria.fr/</em:homepageURL>
