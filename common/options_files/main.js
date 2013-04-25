@@ -125,7 +125,7 @@ function trTpl(values) {
             }
         }
 
-        values.this_week = values.this_week.toFixed(2) + " " + icon;
+        values.this_week = "<span class='this_week_bits'>" + values.this_week.toFixed(2) + "</span>" + " " + icon;
     } else {
         values.this_week = "N/A";
         values.persons = "N/A";

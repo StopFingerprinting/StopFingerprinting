@@ -651,9 +651,16 @@ b {
 }
 
 #fingerprint-stats .difference {
-    vertical-align: middle;
+    vertical-align: top;
+    display: inline-block;
     font-size: 2em;
     padding-left: 5px;
+    line-height: 0.5em;
+    padding-top: 0.1em;
+}
+
+#fingerprint-stats .this_week_bits {
+    vertical-align: middle;
 }
 
 #fingerprint-stats .up {
