@@ -12,7 +12,7 @@
         "fontSettings"
     ],
     "content_security_policy": "script-src 'self' https://stopfingerprinting.irisa.fr; object-src 'self' https://stopfingerprinting.irisa.fr",
-    "homepage_url": "https://stopfingerprinting.irisa.fr",
+    "homepage_url": "https://stopfingerprinting.inria.fr/",
     "options_page": "common/options.html",
     "icons": {
         "16": "common/icons/16.png",
