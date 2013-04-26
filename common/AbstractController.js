@@ -62,14 +62,16 @@ AbstractController.prototype.run = function() {
 
     this._getSettings(function () {
         self._getBrowserId(function () {
+            self._showStatsNotification(function () {
+                self.log("create iframe");
+                self._iframe = self._createIframe();
 
-            self.log("create iframe");
-            self._iframe = self._createIframe();
+                self._iframe.contentDocument.location.href =
+                    self.flashFingerprinterUrl;
 
-            self._iframe.contentDocument.location.href =
-                self.flashFingerprinterUrl;
+                self._initLoop();
+            });
 
-            self._initLoop();
         });
     });
 
@@ -281,3 +283,9 @@ AbstractController.prototype._storeBrowserId = function(id, callback) {
 AbstractController.prototype._reloadIframe = function () {
     throw new Error("Not implemented: This should reload the iframe.");
 }
+
+AbstractController.prototype._showStatsNotification = function (callback) {
+    throw new Error("Not implemented: Shows the stats notification if not " +
+        "already  shown and calls the callback.");
+}
+

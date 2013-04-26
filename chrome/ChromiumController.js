@@ -136,3 +136,35 @@ ChromiumController.prototype._sendMessageToIframe = function(msg) {
 ChromiumController.prototype._reloadIframe = function() {
     this._iframe.src = this.flashFingerprinterUrl;
 }
+
+ChromiumController.prototype._showStatsNotification = function(callback) {
+    var self = this,
+        prefName = "statsNotificationShown" + Date.now();
+
+    chrome.storage.local.get(prefName, function (result) {
+
+        if (! result[prefName]) {
+            var storePrefs = {};
+            storePrefs[prefName] = true;
+            chrome.storage.local.set(storePrefs, function() {
+
+                var notification = webkitNotifications.createNotification(
+                  "common/icons/48.png",
+                  'StopFingerprinting stats!',
+                  "You can now watch stats of your fingerprint in the extension's settings"
+                );
+
+                notification.show();
+
+                if (callback) {
+                    callback();
+                }
+            });
+        } else {
+
+            if (callback) {
+                callback();
+            }
+        }
+    });
+}

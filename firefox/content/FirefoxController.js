@@ -167,3 +167,30 @@ FirefoxController.prototype._initMsgListener = function() {
 FirefoxController.prototype._reloadIframe = function() {
     this._iframe.contentDocument.location.href = this.flashFingerprinterUrl;
 }
+
+FirefoxController.prototype._showStatsNotification = function(callback) {
+
+    var prefName = "statsNotificationShown",
+        shown = this.prefManager.getIntPref(prefName);
+
+    if (! shown) {
+        setTimeout(function () {
+            var notifyBox = gBrowser.getNotificationBox();
+
+            notifyBox.appendNotification(
+                "You can now watch stats of StopFingerprinting in the extension's preferences",
+                "stopfingerprinting/notification-stats",
+                "chrome://stopfingerprinting/content/common/icons/16.png",
+                notifyBox.PRIORITY_INFO_HIGH,
+                []
+            );
+        }, 1000);
+
+        this.prefManager.setIntPref(prefName, 1);
+    }
+
+
+    if (callback) {
+        callback();
+    }
+}

@@ -8,6 +8,7 @@
     },
     "permissions": [
         "https://stopfingerprinting.irisa.fr/*",
+        "notifications",
         "storage",
         "fontSettings"
     ],
@@ -26,5 +27,8 @@
             "all_frames": true,
             "run_at": "document_start"
         }
+    ],
+    "web_accessible_resources": [
+        "common/icons/48.png"
     ]
 }
