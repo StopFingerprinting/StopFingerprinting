@@ -757,3 +757,8 @@ b {
 #fp-test-progress {
     display: none;
 }
+
+#global-stats-msg {
+    font-weight: bold;
+    display: none;
+}

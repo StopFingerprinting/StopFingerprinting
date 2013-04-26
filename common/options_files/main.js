@@ -198,7 +198,11 @@ function gotStats(data) {
     }
 
     $("#fploading").hide();
-    $("#fingerprint-stats").show();
+    $("#fingerprint-stats").fadeIn();
+
+    if (data.global_stats_msg) {
+        $("#global-stats-msg").text(data.global_stats_msg).fadeIn();
+    }
 
     $("#fingerprint-stats tbody tr").each(function () {
         if ($(this).find(".feature-value > span").outerWidth() <= $(this).find(".feature-value").outerWidth()) {
@@ -215,14 +219,14 @@ function gotStats(data) {
                     text: $div
                 },
                 position: {
-                    my: 'center', // ...at the center of the viewport
+                    my: 'center',
                     at: 'center',
                     target: $(window)
                 },
                 show: {
-                    event: 'click', // Show it on click...
-                    solo: true, // ...and hide all other tooltips...
-                    modal: true // ...and make it modal
+                    event: 'click',
+                    solo: true,
+                    modal: true
                 },
                 hide: false,
                 style: {
