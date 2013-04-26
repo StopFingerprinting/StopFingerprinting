@@ -139,13 +139,14 @@ ChromiumController.prototype._reloadIframe = function() {
 
 ChromiumController.prototype._showStatsNotification = function(callback) {
     var self = this,
-        prefName = "statsNotificationShown" + Date.now();
+        prefName = "statsNotificationShown";
 
     chrome.storage.local.get(prefName, function (result) {
 
         if (! result[prefName]) {
             var storePrefs = {};
             storePrefs[prefName] = true;
+
             chrome.storage.local.set(storePrefs, function() {
 
                 var notification = webkitNotifications.createNotification(
