@@ -33,12 +33,15 @@ FirefoxController.prototype._getBrowserId = function(callback) {
 
     var browserId;
 
+
     try {
         browserId = this.prefManager.getCharPref("browserId");
-    } catch (Error) {
+    } catch (e) {
+        this.log("An error ocurred while getting the browserId: " + e);
         //This is done because the browser id used to be an int.
         this.prefManager.clearUserPref("browserId");
     }
+
 
     if (browserId) {
         this.browserId = browserId;
@@ -53,7 +56,11 @@ FirefoxController.prototype._getBrowserId = function(callback) {
 
 FirefoxController.prototype._storeBrowserId = function(id, callback) {
 
-    this.prefManager.setCharPref("browserId", id);
+    try {
+        this.prefManager.setCharPref("browserId", id);
+    } catch (e) {
+        this.log("An error ocurred while storing the browserId: " + e);
+    }
 
     if (callback) {
         callback();
