@@ -37,8 +37,9 @@ if len(sys.argv) > 5:
 
 def zipdir(path, zip):
     for root, dirs, files in os.walk(path, followlinks=True):
-        for file in files:
-            zip.write(os.path.join(root, file))
+        for file_ in files:
+            if file_[0] != ".":
+                zip.write(os.path.join(root, file_))
 
 
 def checK_url_domains():
