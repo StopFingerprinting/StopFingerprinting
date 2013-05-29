@@ -58,6 +58,7 @@ FirefoxController.prototype._storeBrowserId = function(id, callback) {
 
     try {
         this.prefManager.setCharPref("browserId", id);
+        this.browserId = id;
     } catch (e) {
         this.log("An error ocurred while storing the browserId: " + e);
     }
