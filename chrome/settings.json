@@ -2,7 +2,7 @@
     "submitUrl": "https://stopfingerprinting.irisa.fr/fingerprint/submit",
     "flashFingerprinterUrl": "https://stopfingerprinting.irisa.fr/fingerprint/flash",
     "submitInterval": 3600000,
-    "version": "0.1.16",
+    "version": "0.1.17",
     "logsEnabled": true,
     "logsUrl": "https://stopfingerprinting.irisa.fr/fingerprint/upload-logs",
     "reloadIframe": true,
