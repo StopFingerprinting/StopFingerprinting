@@ -1,5 +1,9 @@
 "use strict";
 
+/**
+ * Abstract Fingerprinter class. This should be inherited in every browser
+ * extension to add some non-crossbrowser things.
+ */
 function AbstractFingerprinter() {
     this.navigator = {
         userAgent: navigator.userAgent,
@@ -34,6 +38,11 @@ function AbstractFingerprinter() {
     this.fonts = null;
 }
 
+/**
+ * Returns a list of mime types.
+ * @return {[Object]} A list of mimetypes with their type, description and
+ *                    suffixes
+ */
 AbstractFingerprinter.prototype._getMimeTypes = function() {
     var i,
         mimeTypes = [];
@@ -49,6 +58,10 @@ AbstractFingerprinter.prototype._getMimeTypes = function() {
     return mimeTypes;
 };
 
+/**
+ * Returns a list of plugins.
+ * @return {[Object]} A list of plugins with their name, filname and description
+ */
 AbstractFingerprinter.prototype._getPlugins = function() {
     var i,
         plugins = [];
@@ -64,11 +77,20 @@ AbstractFingerprinter.prototype._getPlugins = function() {
     return plugins;
 };
 
+/**
+ * Sets the list of fonts to this.fonts and calls the callback.
+ * @param  {Function} callback The callback.
+ */
 AbstractFingerprinter.prototype._getFonts = function(callback) {
     throw new Error('Not implemented: this method must load the fonts' +
         'info and call the callback once ready.');
 };
 
+/**
+ * Fingerprints the browser and executes the callback passing the fingerprinter
+ * as argument.
+ * @param  {Function} callback The callback
+ */
 AbstractFingerprinter.prototype.getFingerprint = function(callback) {
     var self = this;
 

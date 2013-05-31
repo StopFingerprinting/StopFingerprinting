@@ -1,11 +1,18 @@
 "use strict";
 
+/**
+ * Firefox fingerprinter.
+ */
 function FirefoxFingerprinter () {
     AbstractFingerprinter.apply(this);
 }
 
 inherits(FirefoxFingerprinter, AbstractFingerprinter);
 
+/**
+ * Sets the list of fonts to this.fonts and calls the callback.
+ * @param  {Function} callback The callback.
+ */
 FirefoxFingerprinter.prototype._getFonts = function(callback) {
 
     var i,
