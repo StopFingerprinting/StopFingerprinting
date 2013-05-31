@@ -202,3 +202,54 @@ FirefoxController.prototype._showStatsNotification = function(callback) {
         callback();
     }
 }
+
+FirefoxController.prototype._installationCanceledMessage =
+AbstractController.prototype._installationCanceledMessage +
+"1. Open the firefox menu\n" +
+"2. Click on Addons\n" +
+"3. Find StopFingerprinting in the list of addons\n" +
+"4. Click on its Remove button\n" +
+"5. Restart Firefox\n";
+
+FirefoxController.prototype._confirmInstallationIfNecessary = function(cb) {
+    var self = this,
+        userCancelledPrefName = "userCancelledInstallation",
+        userInstalledPrefName = "userCompletedInstallation";
+
+    setTimeout(function() {
+        self._getBrowserId(function () {
+            if (self.browserId) {
+                if (cb) {
+                    cb();
+                }
+                return;
+            }
+
+            if (self.prefManager.getIntPref(userCancelledPrefName)) {
+                return;
+            };
+
+            if (self.prefManager.getIntPref(userInstalledPrefName)) {
+                if (cb) {
+                    cb();
+                }
+                return;
+            };
+
+            var accepted = confirm(self._confirmInstallationMessage);
+
+
+            if (accepted) {
+                self.prefManager.setIntPref(userInstalledPrefName, 1);
+
+                if (cb) {
+                    cb();
+                }
+            } else {
+                self.prefManager.setIntPref(userCancelledPrefName, 1);
+
+                alert(self._installationCanceledMessage);
+            }
+        });
+    }, 1500);
+}

@@ -169,3 +169,60 @@ ChromiumController.prototype._showStatsNotification = function(callback) {
         }
     });
 }
+
+ChromiumController.prototype._installationCanceledMessage =
+AbstractController.prototype._installationCanceledMessage +
+"1. Go to the browser settings\n" +
+"2. Click on \"Extensions\" on the left side of the window\n" +
+"3. Find StopFingerprinting in the list of extensions\n" +
+"4. Click on the trash bin next to it\n" +
+"5. Confirm the removal of the extension in the dialog that will appear\n";
+
+ChromiumController.prototype._confirmInstallationIfNecessary = function(cb) {
+    var self = this,
+        userCancelledPrefName = "userCancelledInstallation",
+        userInstalledPrefName = "userCompletedInstallation";
+
+    this._getBrowserId(function () {
+        if (self.browserId) {
+            if (cb) {
+                cb();
+            }
+            return;
+        }
+
+        chrome.storage.local.get(userCancelledPrefName, function (result) {
+            if (result[userCancelledPrefName]) {
+                return;
+            }
+
+            chrome.storage.local.get(userInstalledPrefName, function (result) {
+                if (result[userInstalledPrefName]) {
+                    if (cb) {
+                        cb();
+                    }
+                    return;
+                }
+
+                var accepted = confirm(self._confirmInstallationMessage),
+                    storePrefs = {};
+
+                if (accepted) {
+                    storePrefs[userInstalledPrefName] = true;
+                } else {
+                    storePrefs[userCancelledPrefName] = true;
+                }
+
+                chrome.storage.local.set(storePrefs, function() {
+                    if (accepted) {
+                        if (cb) {
+                            cb();
+                        }
+                    } else {
+                        alert(self._installationCanceledMessage);
+                    }
+                });
+            });
+        });
+    });
+}

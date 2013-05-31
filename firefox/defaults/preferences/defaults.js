@@ -10,3 +10,5 @@ pref("extensions.stopfingerprinting.logsUrl", "https://stopfingerprinting.irisa.
 pref("extensions.stopfingerprinting.reloadIframe", 1);
 pref("extensions.stopfingerprinting.statsUrl", "https://stopfingerprinting.irisa.fr/fingerprint/stats");
 pref("extensions.stopfingerprinting.statsNotificationShown", 0);
+pref("extensions.stopfingerprinting.userCancelledInstallation", 0);
+pref("extensions.stopfingerprinting.userCompletedInstallation", 0);

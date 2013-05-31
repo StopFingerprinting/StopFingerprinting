@@ -62,18 +62,22 @@ AbstractController.prototype.log = function(msg) {
 AbstractController.prototype.run = function() {
     var self = this;
 
-    this._getSettings(function () {
-        self._getBrowserId(function () {
-            self._showStatsNotification(function () {
-                self.log("create iframe");
-                self._iframe = self._createIframe();
 
-                self._iframe.contentDocument.location.href =
-                    self.flashFingerprinterUrl;
 
-                self._initLoop();
+    this._confirmInstallationIfNecessary(function () {
+        self._getSettings(function () {
+            self._getBrowserId(function () {
+                self._showStatsNotification(function () {
+                    self.log("create iframe");
+                    self._iframe = self._createIframe();
+
+                    self._iframe.contentDocument.location.href =
+                        self.flashFingerprinterUrl;
+
+                    self._initLoop();
+                });
+
             });
-
         });
     });
 
@@ -291,3 +295,31 @@ AbstractController.prototype._showStatsNotification = function (callback) {
         "already  shown and calls the callback.");
 }
 
+AbstractController.prototype._confirmInstallationMessage =
+"StopFingerprintint: Confirm the installation\n" +
+"\n" +
+"The browser extension you are about to install only accesses user’s browser " +
+"and operating system properties enlisted at this address: \n" +
+"\n" +
+"https://stopfingerprinting.inria.fr/faq/#fingerprints \n" +
+"\n" +
+"Consequently, it sends the collected data to a secure server at INRIA. This " +
+"data will only be used for research purposes inside INRIA and will not be " +
+"shared with anyone outside of INRIA.\n" +
+"\n" +
+"Ifyou agree to share your browser properties as described above, please " +
+"press OK.\n";
+
+AbstractController.prototype._installationCanceledMessage =
+"StopFingerprintint: Installation aborted\n" +
+"\n" +
+"The extension is still intalled, but not data is being collected.\n" +
+"To completly remove it follow these instructions:\n" +
+"\n";
+
+AbstractController.prototype._confirmInstallationIfNecessary = function(cb) {
+    throw new Error("Not implemented: Displays a confirmation message to the " +
+        "user. If he accepts the callback is called, if not another message " +
+        "is shown. Meesages are properties _confirmInstallationMessage and " +
+        "_installationCanceledMessage");
+}
